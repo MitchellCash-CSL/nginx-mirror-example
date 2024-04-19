@@ -1,0 +1,26 @@
+name: nginx_mirror_example
+
+services:
+  backend_one:
+    build:
+      context: backend_one
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      - ASPNETCORE_URLS=http://+:8000
+
+  backend_two:
+    build:
+      context: backend_two
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      - ASPNETCORE_URLS=http://+:8001
+
+  proxy:
+    build: proxy
+    ports:
+      - 8080:8080
+    depends_on:
+      - backend_one
+      - backend_two
